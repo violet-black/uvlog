@@ -1,0 +1,56 @@
+name: "release"
+
+on:
+  push:
+    tags:
+      - "*"
+
+jobs:
+
+  pypi-publish:
+    name: Upload release to PyPI
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/project/uvlog/
+    permissions:
+      id-token: write  # IMPORTANT: this permission is mandatory for trusted publishing
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install setuptools wheel build twine coverage pytest
+
+      - name: Test with coverage
+        run: |
+          pip install -e .[test]
+          coverage run -m pytest
+          coverage xml
+
+      - name: Build
+        run: |
+          python -m build --wheel --outdir dist/
+          twine check dist/*.whl
+
+      - name: Publish Pypi
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          password: ${{ secrets.PYPI_API_TOKEN }}
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4.0.1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: violet-black/uvlog
+
+      - name: Store coverage results
+        uses: actions/upload-artifact@v3
+        with:
+          name: uvlog
+          path: coverage.xml

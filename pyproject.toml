@@ -1,0 +1,24 @@
+[tool.coverage.report]
+omit = ["setup.py", "tests/*", "docs/*"]
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+addopts = "--capture=sys --doctest-modules"
+log_level = "DEBUG"
+log_cli = true
+testpaths = ["tests", "src"]
+pythonpath = ["src"]
+
+[tool.pylint]
+load-plugins = [
+    'pylint.extensions.check_elif',
+    'pylint.extensions.docstyle',
+    'pylint.extensions.dunder',
+    'pylint.extensions.eq_without_hash',
+    'pylint.extensions.mccabe',
+    'pylint.extensions.overlapping_exceptions',
+    'pylint.extensions.private_import',
+    ''
+]
+disable = ['C0103', 'C0115', 'C0116', 'R0902', 'R0903', 'R0913', 'R1705', 'W0106', 'W0603', 'W0212']
+max-line-length = 130
