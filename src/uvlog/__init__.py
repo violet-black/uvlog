@@ -11,7 +11,7 @@ from uvlog.uvlog import *
 __python_version__ = "3.8"
 __author__ = "violetblackdev@gmail.com"
 __license__ = "MIT"
-__version__ = "0.1.5"
+__version__ = "0.1.6"
 
 add_formatter_type(TextFormatter)
 add_formatter_type(JSONFormatter)
